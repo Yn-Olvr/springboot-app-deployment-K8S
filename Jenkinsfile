@@ -23,12 +23,7 @@ pipeline {
     }
 
     
-
-    stages {
-        stage ('Checkout')
-            steps {
-                Checkout()
-            }
+    stages  {
         stage ('Build') {
             steps {
                 sh 'mvn clean package'
@@ -60,5 +55,5 @@ pipeline {
                     sh "kubectl apply -f eks-deploy-k8s.yaml"
                   }
             }
+        }
     }
-
