@@ -32,7 +32,7 @@ pipeline {
         stage ('Docker Image Build') {
             steps {
                 script {
-                    dockerImage = docker.build(appRegistry +":$BUILD_NUMBER", "./Dockerfile")
+                    dockerImage = docker.build(appRegistry +":$BUILD_NUMBER", "./")
                 }
             }
         }
