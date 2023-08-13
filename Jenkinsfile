@@ -1,8 +1,7 @@
 pipeline {
     agent any
     tools{
-        maven "MAVEN3"
-        jdk "OracleJDK8"
+        maven 'M2_HOME'
     }
     
     environment {
@@ -31,9 +30,10 @@ pipeline {
             
         }
 
-        stage('Docker Image Build')
-            steps 
+        stage('Docker Image Build') {}
+            steps {
                 dockerImage = docker.build(appRegistry +":$BUILD_NUMBER", "./Dockerfile")
+                }
             }
 
         stage('Upload App Image') {
@@ -47,7 +47,7 @@ pipeline {
             }
         }
 
-        stage('Integrate Jenkins with EKS Cluster and deploy app')
+        stage('Integrate Jenkins with EKS Cluster and deploy app') {
             steps{
                 withAWS(credentials: 'awscreds', region: 'us-east-1')
                   script {
@@ -56,3 +56,4 @@ pipeline {
                   }
             }
         }
+    }
