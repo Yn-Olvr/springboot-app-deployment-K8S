@@ -26,15 +26,16 @@ pipeline {
         stage ('Build') {
             steps{
                 sh 'mvn clean package'
-            }
-            
+            }    
         }
 
-        stage('Docker Image Build') {}
+        stage ('Docker Image Build') {
             steps {
-                dockerImage = docker.build(appRegistry +":$BUILD_NUMBER", "./Dockerfile")
+                script {
+                    dockerImage = docker.build(appRegistry +":$BUILD_NUMBER", "./Dockerfile")
                 }
             }
+        }
 
         stage('Upload App Image') {
             steps {
@@ -48,12 +49,14 @@ pipeline {
         }
 
         stage('Integrate Jenkins with EKS Cluster and deploy app') {
-            steps{
+            steps {
                 withAWS(credentials: 'awscreds', region: 'us-east-1')
                   script {
                     sh ('aws eks update-kubeconfig --name eks-cluster --region us-east-1')
                     sh "kubectl apply -f eks-deploy-k8s.yaml"
-                  }
+                }
+                }   
             }
         }
     }
+
