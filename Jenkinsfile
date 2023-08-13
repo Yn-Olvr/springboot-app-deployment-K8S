@@ -23,16 +23,16 @@ pipeline {
     }
 
     
-    stages  {
+    stages{
         stage ('Build') {
-            steps {
+            steps{
                 sh 'mvn clean package'
             }
             
         }
 
-        stage ('Docker Image Build')
-            steps {
+        stage('Docker Image Build')
+            steps 
                 dockerImage = docker.build(appRegistry +":$BUILD_NUMBER", "./Dockerfile")
             }
 
@@ -48,7 +48,7 @@ pipeline {
         }
 
         stage('Integrate Jenkins with EKS Cluster and deploy app')
-            steps {
+            steps{
                 withAWS(credentials: 'awscreds', region: 'us-east-1')
                   script {
                     sh ('aws eks update-kubeconfig --name eks-cluster --region us-east-1')
@@ -56,4 +56,3 @@ pipeline {
                   }
             }
         }
-    }
